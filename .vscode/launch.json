@@ -1,0 +1,51 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+		{
+			"name": "Launch",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/bin/start.ts",
+			"stopOnEntry": false,
+			"args": [],
+			"cwd": "${workspaceRoot}",
+			"preLaunchTask": null,
+			"runtimeExecutable": null,
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"env": {
+                "DATASTORE": "mongodb://userService:userService@doc-db.jarnil.vm:27017/userService",
+				"NODE_ENV": "development",
+				"PORT": "3000",
+				"JWT_SECRET": "AuthT0k3nP@ssw0rd",
+				"SECURE_API": "true",
+				"HASH_ALGORITHM": "HS256"
+			},
+            "console": "internalConsole",
+			"sourceMaps": true,
+            "outDir": "${workspaceRoot}/build"
+		},
+        {
+            "name": "Attach",
+            "type": "node",
+            "request": "attach",
+            "port": 5858,
+            "address": "localhost",
+            "restart": false,
+            "sourceMaps": false,
+            "outDir": null,
+            "localRoot": "${workspaceRoot}",
+            "remoteRoot": null
+        },
+        {
+            "name": "Attach to Process",
+            "type": "node",
+            "request": "attach",
+            "processId": "${command.PickProcess}",
+            "port": 5858,
+            "sourceMaps": false,
+            "outDir": null
+        }
+    ]
+}
