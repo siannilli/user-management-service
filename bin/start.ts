@@ -1,6 +1,6 @@
-import { Server } from 'base-rest-service-container/Server';
-import { IRoute } from 'base-rest-service-container/Route/IRoute';
-import {ApplicationConfig} from 'base-rest-service-container/Config/ApplicationConfig';
+import { Server } from 'base-rest-service-container/build/Server';
+import { IRoute } from 'base-rest-service-container/build/Route/IRoute';
+import {ApplicationConfig} from 'base-rest-service-container/build/Config/ApplicationConfig';
 
 import * as mongoose from 'mongoose';
 import { UsersApi } from '../RouteController/UsersApi';

@@ -1,15 +1,16 @@
 import * as mongoose from 'mongoose';
 import * as crypto from 'crypto';
+import * as Repository from 'base-mongodb-repository/build/IRepository';
+import { RepositoryQueryCommand } from 'base-mongodb-repository/build/RepositoryQuery';
+import { RepositoryQueryResult } from 'base-mongodb-repository/build/RepositoryQueryResult';
 
-import { RepositoryQueryCommand, RepositoryQueryResult } from 'base-rest-service-container/Model/RepositoryQuery';
-import * as Repository from 'base-rest-service-container/Model/IRepository';
+import * as Errors from 'base-rest-service-container/build/Common/Exceptions';
 
-import * as Errors from 'base-rest-service-container/Common/Exceptions';
-
-import { ApplicationConfig } from 'base-rest-service-container/Config/ApplicationConfig';
-import { TokenPayload } from 'base-rest-service-container/Common/SecurityService';
+import { ApplicationConfig } from 'base-rest-service-container/build/Config/ApplicationConfig';
+import { TokenPayload } from 'base-rest-service-container/build/Common/SecurityService';
 
 import * as userprofiles from './AppAndPermissions';
+
 
 export interface IUserModel extends IUser, mongoose.Document {
     getTokenPayload();

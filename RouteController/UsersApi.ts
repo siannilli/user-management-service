@@ -1,15 +1,16 @@
 'use strict';
 import * as express from 'express';
-import { Server } from 'base-rest-service-container/Server';
+import { Server } from 'base-rest-service-container/build/Server';
 import * as url from 'url';
 import * as path from 'path';
 
-import { IRoute } from 'base-rest-service-container/Route/IRoute'
+import { IRoute } from 'base-rest-service-container/build/Route/IRoute'
 import * as Repository from '../Model/UserRepository';
-import { RepositoryQueryCommand, RepositoryQueryResult } from 'base-rest-service-container/Model/RepositoryQuery';
-import * as Errors from 'base-rest-service-container/Common/Exceptions';
-import { TokenManagement, TokenPayload } from 'base-rest-service-container/Common/SecurityService';
-import {ApplicationConfig} from 'base-rest-service-container/Config/ApplicationConfig';
+import { RepositoryQueryCommand } from 'base-mongodb-repository/build/RepositoryQuery';
+import { RepositoryQueryResult } from 'base-mongodb-repository/build/RepositoryQueryResult';
+import * as Errors from 'base-rest-service-container/build/Common/Exceptions';
+import { TokenManagement, TokenPayload } from 'base-rest-service-container/build/Common/SecurityService';
+import {ApplicationConfig} from 'base-rest-service-container/build/Config/ApplicationConfig';
 import { ShippingApplications, ShippingRoles } from '../Model/AppAndPermissions';
 
 /**
@@ -65,7 +66,7 @@ export class UsersApi implements IRoute {
     }
 
     private Find = (request: express.Request, response: express.Response) => {
-        let searchQuery = RepositoryQueryCommand.ParseRequest(request);
+        let searchQuery = RepositoryQueryCommand.ParseRequest(request.query);
         searchQuery.sort = "username";
         
         this.repository.Find(searchQuery)

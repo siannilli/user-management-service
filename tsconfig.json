@@ -5,7 +5,8 @@
         "watch": true,
         "module": "commonjs",
         "sourceMap": true,
-        "outDir": "./build"
+        "outDir": "./build",
+        "rootDir": "./"        
     },
     "exclude": [
         "node_modules"
