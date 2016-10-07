@@ -1,13 +1,15 @@
 import { Server } from 'base-rest-service-container/build/Server';
 import { IRoute } from 'base-rest-service-container/build/Route/IRoute';
 import {ApplicationConfig} from 'base-rest-service-container/build/Config/ApplicationConfig';
-
+import { UserRepository } from '../Model/UserRepository';
 import * as mongoose from 'mongoose';
 import { UsersApi } from '../RouteController/UsersApi';
 
 let config:ApplicationConfig = new ApplicationConfig();
 let server:Server = Server.Bootstrap(config);
-let api:IRoute = new UsersApi('/users');
+let userRepository = new UserRepository();
+
+let api:IRoute = new UsersApi(userRepository, '/users');
 
 server.AddRoute(api);
 

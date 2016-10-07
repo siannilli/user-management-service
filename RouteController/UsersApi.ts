@@ -5,7 +5,7 @@ import * as url from 'url';
 import * as pathUtils from 'path';
 
 import { IRoute } from 'base-rest-service-container/build/Route/IRoute'
-import * as Repository from '../Model/UserRepository';
+import * as UserModel from '../Model/UserRepository';
 import { RepositoryQueryCommand } from 'base-mongodb-repository/build/RepositoryQuery';
 import { RepositoryQueryResult } from 'base-mongodb-repository/build/RepositoryQueryResult';
 import * as Errors from 'base-rest-service-container/build/Common/Exceptions';
@@ -14,8 +14,8 @@ import {ApplicationConfig} from 'base-rest-service-container/build/Config/Applic
 import { ShippingApplications, ShippingRoles } from '../Model/AppAndPermissions';
 
 interface IUserRequest extends IAuthenticatedRequest {
-    ActionUser: Repository.IUserModel;
-    CallerUser: Repository.IUserModel;
+    ActionUser: UserModel.IUserModel;
+    CallerUser: UserModel.IUserModel;
 }
 
 /**
@@ -24,9 +24,9 @@ interface IUserRequest extends IAuthenticatedRequest {
 export class UsersApi implements IRoute {
     private app: express.Application = null;
     private serverContainer: Server;
-    private repository: Repository.UserRepository = new Repository.UserRepository();
+//    private repository: Repository.UserRepository = new Repository.UserRepository();
     private tokenService: TokenManagement;
-    constructor(public path: string = '/api/users') {
+    constructor(private repository: UserModel.UserRepository, public path: string = '/api/users') {
 
     }
 
@@ -79,8 +79,6 @@ export class UsersApi implements IRoute {
         router
             .get('/user/:id/apps', this.GetUserApplications)
             .post('/user/:id/apps', this.ChangeUserApplications);
-
-
 
         return router;
     }
@@ -146,7 +144,7 @@ export class UsersApi implements IRoute {
     private Add = (request: express.Request, response: express.Response) => {
 
         try {
-            let command: Repository.AddUserCommand = new Repository.AddUserCommand(request.body.username, request.body.password, request.body.password_confirm, request.body.email);
+            let command: UserModel.AddUserCommand = new UserModel.AddUserCommand(request.body.username, request.body.password, request.body.password_confirm, request.body.email);
 
             this.repository.Add(command)
                 .then(doc => {
@@ -169,9 +167,9 @@ export class UsersApi implements IRoute {
             request.ActionUser[p] = request.body[p];
         }
         try {
-            let UpdateCommand = new Repository.UpdateUserCommand(request.ActionUser);
+            let UpdateCommand = new UserModel.UpdateUserCommand(request.ActionUser);
             this.repository.Save(UpdateCommand)
-                .then((user: Repository.IUserModel) => response.json(user))
+                .then((user: UserModel.IUserModel) => response.json(user))
                 .catch(err => {
                     Errors.SendError(err, response);
                 });
@@ -184,7 +182,7 @@ export class UsersApi implements IRoute {
 
     private ChangeEmailAddress = (request: IUserRequest, response: express.Response) => {
         try {
-            let command = new Repository.ChangeEmailAddressCommand(request.CallerUser, request.body.email_address);
+            let command = new UserModel.ChangeEmailAddressCommand(request.CallerUser, request.body.email_address);
             this.repository.HandleChangeEmailAddress(command)
                 .then(user => response.status(200).json(user))
                 .catch(err => Errors.SendError(err, response));
@@ -195,10 +193,9 @@ export class UsersApi implements IRoute {
 
     }
 
-
     private ChangeUserRoles = (request: IUserRequest, response: express.Response) => {
         try {
-            let command = new Repository.ChangeUserRolesCommand(request.ActionUser, request.body.roles);
+            let command = new UserModel.ChangeUserRolesCommand(request.ActionUser, request.body.roles);
 
             this.repository.Save(command)
                 .then(doc => response.status(200).json(doc))
@@ -211,7 +208,7 @@ export class UsersApi implements IRoute {
 
     private ChangeUserApplications = (request: IUserRequest, response: express.Response) => {
         try {
-            let command = new Repository.ChangeUserApplicationsCommand(request.ActionUser, request.body.applications);
+            let command = new UserModel.ChangeUserApplicationsCommand(request.ActionUser, request.body.applications);
             this.repository.Save(command)
                 .then(doc => response.status(200).json(doc))
                 .catch(error => Errors.SendError(error, response));
@@ -224,7 +221,7 @@ export class UsersApi implements IRoute {
     private ChangePassword = (request: IUserRequest, response: express.Response) => {
 
         try {
-            let command = new Repository.ChangePasswordCommand(request.CallerUser, request.body.oldpassword, request.body.password, request.body.password_confirm);
+            let command = new UserModel.ChangePasswordCommand(request.CallerUser, request.body.oldpassword, request.body.password, request.body.password_confirm);
             this.repository.HandleChangePassword(command)
                 .then(user => response.sendStatus(200))
                 .catch(err => Errors.SendError(err, response));
@@ -236,7 +233,7 @@ export class UsersApi implements IRoute {
 
     private ResetUserPassword = (request: IUserRequest, response: express.Response) => {
         try {
-            let command = new Repository.ResetPassword(request.ActionUser, request.body.password, request.body.password_confirm);
+            let command = new UserModel.ResetPassword(request.ActionUser, request.body.password, request.body.password_confirm);
             this.repository.Save(command)
                 .then(user => response.sendStatus(200))
                 .catch(error => Errors.SendError(error, response));
@@ -249,7 +246,7 @@ export class UsersApi implements IRoute {
 
     private Delete = (request: IUserRequest, response: express.Response) => {
         try {
-            let command = new Repository.DeleteUserCommand(request.ActionUser);
+            let command = new UserModel.DeleteUserCommand(request.ActionUser);
             this.repository.Delete(command)
                 .then(deletedUser => response.status(204).json(deletedUser))
                 .catch(err => Errors.SendError(err, response));
@@ -269,7 +266,7 @@ export class UsersApi implements IRoute {
                     if (!user)
                         Errors.SendError(new Errors.InvalidCredentialErrors(), response);
                     else {
-                        let command = new Repository.AuthenticateUserCommand(user, request.body.password);
+                        let command = new UserModel.AuthenticateUserCommand(user, request.body.password);
                         response.json(this.tokenService.SignPayload(command.token));
                     }
 
@@ -282,12 +279,12 @@ export class UsersApi implements IRoute {
     }
 
     private GetUserRoles = (request: IUserRequest, response: express.Response) => {
-        let user: Repository.IUserModel = request.ActionUser || request.CallerUser;
+        let user: UserModel.IUserModel = request.ActionUser || request.CallerUser;
         response.json(user.roles || []);
     }
 
     private GetUserApplications = (request: IUserRequest, response: express.Response) => {
-        let user: Repository.IUserModel = request.ActionUser || request.CallerUser;
+        let user: UserModel.IUserModel = request.ActionUser || request.CallerUser;
         response.json(user.applications || []);
     }
 

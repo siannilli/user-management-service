@@ -27,15 +27,15 @@ var schema = new mongoose.Schema(
     }
 );
 
-schema.methods.getTokenPayload = function() {
-        return new TokenPayload(this.username, 'user', this.applications || [], this.roles || []);    
+schema.methods.getTokenPayload = function () {
+    return new TokenPayload(this.username, 'user', this.applications || [], this.roles || []);
 };
 
 const SCHEMA_NAME = 'user';
 const COLLECTION_NAME = 'users';
 
 export let UserSchema = mongoose.model<IUserModel>(SCHEMA_NAME, schema, COLLECTION_NAME, true);
-    
+
 // TS interface
 export interface IUser {
     username: string;
@@ -47,15 +47,15 @@ export interface IUser {
 
 
 export class UserRepository extends Repository.Repository<IUserModel> {
-    constructor(){        
+    constructor() {
         super(UserSchema);
     }
 
     public GetByUsername(username: string): Promise.IThenable<IUserModel> {
         let userSearch = this.model.findOne({ 'username': username });
 
-        return new Promise(function(resolve, reject) {
-            userSearch.exec(function(err: any, doc: IUserModel) {
+        return new Promise(function (resolve, reject) {
+            userSearch.exec(function (err: any, doc: IUserModel) {
                 if (err)
                     reject(new Errors.DatabaseError(err));
                 else
@@ -132,7 +132,7 @@ export class AddUserCommand extends Repository.BaseAddEntityCommand<IUserModel> 
 }
 
 export class UpdateUserCommand extends Repository.BaseAddEntityCommand<IUserModel>{
-    constructor(user:IUserModel){
+    constructor(user: IUserModel) {
         super(user);
     }
 }
@@ -140,7 +140,7 @@ export class UpdateUserCommand extends Repository.BaseAddEntityCommand<IUserMode
 export class DeleteUserCommand extends Repository.BaseDeleteEntityCommand<IUserModel> {
     constructor(user: IUserModel) {
         super(user);
-        if (user.roles.indexOf('admin')>-1 || user.roles.indexOf('built-in')>-1)
+        if (user.roles.indexOf('admin') > -1 || user.roles.indexOf('built-in') > -1)
             throw new Errors.NotAuthorizedError('Cannot delete this user');
     }
 }
@@ -182,40 +182,40 @@ export class ChangeEmailAddressCommand extends Repository.BaseSaveEntityCommand<
  * 
  */
 export class ChangeUserApplicationsCommand extends Repository.BaseSaveEntityCommand<IUserModel> {
-    constructor(user: IUserModel, applications: string[]) {        
+    constructor(user: IUserModel, applications: string[]) {
         super(user);
-        
+
         if (!applications) throw new Errors.MalformedEntityError('Applications list cannot be undefined.');
-        
-        let wrongapps:string[] = [];
+
+        let wrongapps: string[] = [];
         applications.forEach(app => {
-            if (userprofiles.ShippingApplications.indexOf(app) < 0) 
+            if (userprofiles.ShippingApplications.indexOf(app) < 0)
                 wrongapps.push(app);
-                
+
         });
-        
+
         if (wrongapps && wrongapps.length)
             throw new Errors.MalformedEntityError(`Wrong application name(s) in list (${wrongapps.join(', ')})`);
-            
-        user.applications = applications;                    
+
+        user.applications = applications;
     }
 }
 
 export class ChangeUserRolesCommand extends Repository.BaseSaveEntityCommand<IUserModel>{
     constructor(user: IUserModel, roles: string[]) {
         super(user);
-        
+
         if (!roles) throw new Errors.MalformedEntityError('Roles list cannot be undefined.');
-        
-        let wrongroles:string[] = [];
+
+        let wrongroles: string[] = [];
         roles.forEach(role => {
-            if (userprofiles.ShippingRoles.indexOf(role) < 0) 
+            if (userprofiles.ShippingRoles.indexOf(role) < 0)
                 wrongroles.push(role);
-                
+
         });
-        
+
         if (wrongroles && wrongroles.length)
-            throw new Errors.MalformedEntityError(`Wrong role name(s) in list (${wrongroles.join(', ')})`);                    
+            throw new Errors.MalformedEntityError(`Wrong role name(s) in list (${wrongroles.join(', ')})`);
 
         user.roles = roles;
     }
@@ -224,14 +224,14 @@ export class ChangeUserRolesCommand extends Repository.BaseSaveEntityCommand<IUs
 export class AuthenticateUserCommand extends BaseUserCommand {
 
     constructor(user: IUserModel, password: string) {
-        super(user);                
-        
+        super(user);
+
         if (user.password !== UserRepository.HashPassword(password))
             throw new Errors.InvalidCredentialErrors();
-        
+
     }
 
-    public get token():TokenPayload {
+    public get token(): TokenPayload {
         // sign the tocken
         return this.user.getTokenPayload();
     }
@@ -241,10 +241,10 @@ export class AuthenticateUserCommand extends BaseUserCommand {
 export class ResetPassword extends Repository.BaseSaveEntityCommand<IUserModel> {
     constructor(user: IUserModel, password: string, password_confirm: string) {
         super(user);
-        
-        if (password !== password_confirm) throw new Errors.MalformedEntityError('Password and password confirm are not the same.');        
+
+        if (password !== password_confirm) throw new Errors.MalformedEntityError('Password and password confirm are not the same.');
         BaseUserCommand.ValidatePassword(password);
-        
-        user.password = UserRepository.HashPassword(password);        
+
+        user.password = UserRepository.HashPassword(password);
     }
 }
