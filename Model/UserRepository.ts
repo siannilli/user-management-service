@@ -31,7 +31,10 @@ schema.methods.getTokenPayload = function() {
         return new TokenPayload(this.username, 'user', this.applications || [], this.roles || []);    
 };
 
-export let UserSchema = mongoose.model<IUserModel>('user', schema, 'users', true);
+const SCHEMA_NAME = 'user';
+const COLLECTION_NAME = 'users';
+
+export let UserSchema = mongoose.model<IUserModel>(SCHEMA_NAME, schema, COLLECTION_NAME, true);
     
 // TS interface
 export interface IUser {
@@ -110,7 +113,7 @@ export abstract class BaseUserCommand {
 
 export class AddUserCommand extends Repository.BaseAddEntityCommand<IUserModel> {
     constructor(username: string, password: string, password_confirm: string, email: string) {
-        let UserModel = mongoose.model<IUserModel>("User")
+        let UserModel = mongoose.model<IUserModel>(SCHEMA_NAME)
         let user: IUserModel = new UserModel({ username: username });
         super(user);
 
@@ -125,6 +128,12 @@ export class AddUserCommand extends Repository.BaseAddEntityCommand<IUserModel> 
             user.email = email;
         }
 
+    }
+}
+
+export class UpdateUserCommand extends Repository.BaseAddEntityCommand<IUserModel>{
+    constructor(user:IUserModel){
+        super(user);
     }
 }
 

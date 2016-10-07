@@ -8,6 +8,7 @@
     "crypto-js": "registry:dt/crypto-js#3.1.4+20160708041433",
     "debug": "registry:dt/debug#0.0.0+20160317120654",
     "express": "registry:dt/express#4.0.0+20160708185218",
+    "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20160928124223",
     "jsonwebtoken": "registry:dt/jsonwebtoken#0.0.0+20160720062725",
     "mongodb": "registry:dt/mongodb#2.1.0+20160602142941",
     "mongoose": "registry:dt/mongoose#4.5.9+20160929125912",
@@ -15,6 +16,7 @@
     "node": "registry:dt/node#6.0.0+20160928143418",
     "node-uuid": "registry:dt/node-uuid#0.0.0+20160316155526",
     "promise": "registry:dt/promise#7.1.1+20160602154553",
-    "serve-favicon": "registry:dt/serve-favicon#0.0.0+20160316155526"
+    "serve-favicon": "registry:dt/serve-favicon#0.0.0+20160316155526",
+    "serve-static": "registry:dt/serve-static#0.0.0+20160606155157"
   }
 }
