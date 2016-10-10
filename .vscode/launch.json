@@ -15,7 +15,7 @@
 				"--nolazy"
 			],
 			"env": {
-                "DATASTORE": "mongodb://userService:userService@doc-db.jarnil.vm:27017/userService",
+                "DATASTORE": "mongodb://dbo:dbo@localhost/development",
 				"NODE_ENV": "development",
 				"PORT": "3000",
 				"JWT_SECRET": "AuthT0k3nP@ssw0rd",
