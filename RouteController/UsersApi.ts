@@ -1,16 +1,16 @@
 'use strict';
 import * as express from 'express';
-import { Server } from 'base-rest-service-container/build/Server';
+import { Server } from 'base-rest-service/build/Server';
 import * as url from 'url';
 import * as pathUtils from 'path';
 
-import { IRoute } from 'base-rest-service-container/build/Route/IRoute'
+import { IRoute } from 'base-rest-service/build/Route/IRoute'
 import * as UserModel from '../Model/UserRepository';
 import { RepositoryQueryCommand } from 'base-mongodb-repository/build/RepositoryQuery';
 import { RepositoryQueryResult } from 'base-mongodb-repository/build/RepositoryQueryResult';
-import * as Errors from 'base-rest-service-container/build/Common/Exceptions';
-import { TokenManagement, TokenPayload, IAuthenticatedRequest } from 'base-rest-service-container/build/Common/SecurityService';
-import {ApplicationConfig} from 'base-rest-service-container/build/Config/ApplicationConfig';
+import * as Errors from 'base-rest-service/build/Common/Exceptions';
+import { TokenManagement, TokenPayload, IAuthenticatedRequest } from 'base-rest-service/build/Common/SecurityService';
+import {ApplicationConfig} from 'base-rest-service/build/Config/ApplicationConfig';
 import { ShippingApplications, ShippingRoles } from '../Model/AppAndPermissions';
 
 interface IUserRequest extends IAuthenticatedRequest {
@@ -24,7 +24,7 @@ interface IUserRequest extends IAuthenticatedRequest {
 export class UsersApi implements IRoute {
     private app: express.Application = null;
     private serverContainer: Server;
-//    private repository: Repository.UserRepository = new Repository.UserRepository();
+
     private tokenService: TokenManagement;
     constructor(private repository: UserModel.UserRepository, public path: string = '/api/users') {
 

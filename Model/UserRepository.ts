@@ -4,10 +4,10 @@ import * as Repository from 'base-mongodb-repository/build/IRepository';
 import { RepositoryQueryCommand } from 'base-mongodb-repository/build/RepositoryQuery';
 import { RepositoryQueryResult } from 'base-mongodb-repository/build/RepositoryQueryResult';
 
-import * as Errors from 'base-rest-service-container/build/Common/Exceptions';
+import * as Errors from 'base-rest-service/build/Common/Exceptions';
 
-import { ApplicationConfig } from 'base-rest-service-container/build/Config/ApplicationConfig';
-import { TokenPayload } from 'base-rest-service-container/build/Common/SecurityService';
+import { ApplicationConfig } from 'base-rest-service/build/Config/ApplicationConfig';
+import { TokenPayload } from 'base-rest-service/build/Common/SecurityService';
 
 import * as userprofiles from './AppAndPermissions';
 
@@ -51,7 +51,7 @@ export class UserRepository extends Repository.Repository<IUserModel> {
         super(UserSchema);
     }
 
-    public GetByUsername(username: string): Promise.IThenable<IUserModel> {
+    public GetByUsername(username: string): Promise<IUserModel> {
         let userSearch = this.model.findOne({ 'username': username });
 
         return new Promise(function (resolve, reject) {
@@ -66,11 +66,11 @@ export class UserRepository extends Repository.Repository<IUserModel> {
 
     }
 
-    public HandleChangeEmailAddress(command: ChangeEmailAddressCommand): Promise.IThenable<IUserModel> {
+    public HandleChangeEmailAddress(command: ChangeEmailAddressCommand): Promise<IUserModel> {
         return this.Save(command);
     }
 
-    public HandleChangePassword(command: ChangePasswordCommand): Promise.IThenable<IUserModel> {
+    public HandleChangePassword(command: ChangePasswordCommand): Promise<IUserModel> {
         return this.Save(command);
     }
 

@@ -1,8 +1,7 @@
 {
     "compileOnSave": true,
     "compilerOptions": {      
-        "target": "es5",
-        "watch": true,
+        "target": "es6",
         "module": "commonjs",
         "sourceMap": true,
         "outDir": "./build",
