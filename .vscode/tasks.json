@@ -4,8 +4,8 @@
     "version": "0.1.0",
     "command": "tsc",
     "isShellCommand": true,
-    "args": ["-p", "."],
+    "args": ["-w", "-p", "."],
     "showOutput": "silent",
     "isWatching": true,
-    "problemMatcher": "$tsc"
+    "problemMatcher": "$tsc-watch"
 }

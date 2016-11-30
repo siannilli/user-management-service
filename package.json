@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./build/bin/start",
     "install": "typings install && tsc -p .",
+    "setup-useradmin": "node ./build/bin/create-admin",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

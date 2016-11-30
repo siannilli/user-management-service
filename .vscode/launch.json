@@ -27,6 +27,31 @@
             "outDir": "${workspaceRoot}/build"
 		},
         {
+			"name": "Setup user admin",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceRoot}/bin/setup.ts",
+			"stopOnEntry": false,
+			"args": [],
+			"cwd": "${workspaceRoot}",
+			"preLaunchTask": null,
+			"runtimeExecutable": null,
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"env": {
+                "DATASTORE": "mongodb://localhost/development",
+				"NODE_ENV": "development",
+				"PORT": "3000",
+				"JWT_SECRET": "AuthT0k3nP@ssw0rd",
+				"SECURE_API": "true",
+				"HASH_ALGORITHM": "HS256"
+			},
+            "console": "internalConsole",
+			"sourceMaps": true,
+            "outDir": "${workspaceRoot}/build"
+        },
+        {
             "name": "Attach",
             "type": "node",
             "request": "attach",
