@@ -148,6 +148,7 @@ export class UsersApi implements IRoute {
 
             this.repository.Add(command)
                 .then(doc => {
+                    response.header('Access-Control-Expose-Headers', 'Location');
                     response.header('Location', pathUtils.join(request.baseUrl, doc._id.toString()));
                     response.sendStatus(201);
                 })
